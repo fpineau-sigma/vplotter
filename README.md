@@ -38,6 +38,7 @@ The plotter needs some commandline arguments:
 - z_up    :    a value for the servo motor to lift the pen (1 - 100)
 - z_down  :    a value for the servo motro to move down the pen (1 - 100)
 - steps   :    the count of steps to move the cord at 1 mm:
+- coefficient : a value multiplicator to determine time between two moves from F (default 1.2)
  
     1600 / circumference of the pulley
     

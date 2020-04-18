@@ -37,7 +37,7 @@ public:
     Machine(const Machine& orig);
     virtual ~Machine();
     //int CalculateLine(double moveToX, double moveToY);
-    int MoveToPoint(double X, double Y, double F);
+    int MoveToPoint(double X, double Y, double F, double C);
     void penDown(bool down);
     double getX(){return currentX;};
     double getY(){return currentY;};

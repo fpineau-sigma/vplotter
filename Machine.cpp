@@ -259,9 +259,10 @@ bool Machine::moveShortDist(double X, double Y, unsigned int time) {
  * @param X
  * @param Y
  * @param F Feed in mm/min
+ * @param C coefficient (default 1.2)
  * @return 
  */
-int Machine::MoveToPoint(double X, double Y, double F) {
+int Machine::MoveToPoint(double X, double Y, double F, double C) {
     unsigned int time = 0;
     if(X == this->currentX && Y == this->currentY){
         return 0;
@@ -270,7 +271,7 @@ int Machine::MoveToPoint(double X, double Y, double F) {
     if (F <= 0.0) {
         F = 100000; // big number for rapid speed
     }
-    F *= 1.2; // correction factor, the value fits better
+    F *= C; // correction factor, the value fits better
     // calculate the time of a step from feed F:
     time = 1000000.0 * 60.0 / (this->StepsPermm * F);
     // set the time per step not too small:

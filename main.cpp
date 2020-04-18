@@ -65,6 +65,7 @@ int main(int argc, char** argv) {
     double x0 = 100.0;
     double y0 = -700.0;
     double stepsPermm = 40.0;
+    double coefficient = 1.2; // coefficient multiplicateur de f pour gérer la temporisation entre les mouvements
     int servo_up = 13;
     int servo_down = 8;
 
@@ -82,13 +83,14 @@ int main(int argc, char** argv) {
             {"steps", required_argument, 0, 's'},
             {"z_up", required_argument, 0, 'u'},
             {"z_down", required_argument, 0, 'd'},
+            {"coefficient", required_argument, 0, 'c'},
 
             {0, 0, 0, 0}
         };
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        c = getopt_long(argc, argv, "b:y:x:s:u:p:",
+        c = getopt_long(argc, argv, "b:y:x:s:u:d:c:",
                 long_options, &option_index);
 
         /* Detect the end of the options. */
@@ -132,6 +134,11 @@ int main(int argc, char** argv) {
                 servo_down = atof(optarg);
                 std::cout << "z_down = " << servo_down << std::endl;
                 count_options++;
+                break;
+            
+            case 'c':
+                coefficient = atof(optarg);
+                std::cout << "coefficient = " << coefficient << std::endl;
                 break;
 
             default:
@@ -210,7 +217,7 @@ int main(int argc, char** argv) {
 
         if (M_command == 30) {
             m.penDown(false);
-            m.MoveToPoint(0.0, 0.0, 0.0);
+            m.MoveToPoint(0.0, 0.0, 0.0, coefficient);
             return 0;
 
         }
@@ -232,10 +239,10 @@ int main(int argc, char** argv) {
             std::cout << " --> " << linenumber << ": ";
             if (G_command == 0) {
                 std::cout << "   -> rapid  to: " << x << ", " << y << std::endl;
-                m.MoveToPoint(x, y, 0.0);
+                m.MoveToPoint(x, y, 0.0, coefficient);
             } else if (G_command == 1) {
                 std::cout << "   -> line  to: " << x << ", " << y << ", f=" << f << std::endl;
-                m.MoveToPoint(x, y, f);
+                m.MoveToPoint(x, y, f, coefficient);
             } else if (G_command == 2 || G_command == 3) {
 
                 bool ccw;
@@ -258,7 +265,7 @@ int main(int argc, char** argv) {
                 std::vector<Point> points = g.getArcPolygon(Point(m.getX(), m.getY()), Point(x, y), r, ccw);
                 for (int i = 0; i < points.size(); i++) {
                     //std::cout << points[i].x << ", " << points[i].y << std::endl;
-                    m.MoveToPoint(points[i].x, points[i].y, f);
+                    m.MoveToPoint(points[i].x, points[i].y, f, coefficient);
                 }
             }
 
